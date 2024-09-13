@@ -1,25 +1,21 @@
 import { useState } from "react";
-import useTodo from "./useTodo";
+import { useLazyGetTodoByIdQuery } from "./apiSlice";
 
 const Todo = ({ todo }) => {
   const [showInfo, setShowInfo] = useState(false);
-  const { data, loading, error, getTodo, deleteTodo } = useTodo(todo.id);
+  const [trigger, { data, error, isLoading, isUninitialized }] =
+    useLazyGetTodoByIdQuery();
   const handleClick = () => {
-    if (!showInfo) {
-      getTodo();
-      setShowInfo(true);
-    } else {
-      setShowInfo(false);
+    if (!showInfo && isUninitialized) {
+      trigger(todo.id);
     }
+    setShowInfo(!showInfo);
   };
-  const handleDelete = () => {
-    deleteTodo();
-  };
+
   return (
     <div>
       <button onClick={() => handleClick()}>{todo.title}</button>
-      <button onClick={() => handleDelete()}>delete</button>
-      {showInfo && loading && <div>Loading</div>}
+      {showInfo && isLoading && <div>Loading</div>}
       {showInfo && error && <div>{error}</div>}
       {showInfo && data && (
         <div>

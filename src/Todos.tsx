@@ -1,4 +1,4 @@
-import Todo from "./Todo";
+import Todo from "./features/todo/Todo";
 import useFetch from "./useFetch";
 
 const Todos = () => {
