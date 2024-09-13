@@ -1,26 +1,27 @@
 import { useState } from "react";
-import useTodo from "./useTodo";
+import { useQuery } from "react-query";
 
 const Todo = ({ todo }) => {
   const [showInfo, setShowInfo] = useState(false);
-  const { data, loading, error, getTodo, deleteTodo } = useTodo(todo.id);
+  const { isLoading, error, data } = useQuery("repoData", () =>
+    fetch(`https://jsonplaceholder.typicode.com/todos/${todo.id}`).then(
+      (response) => response.json()
+    )
+  );
+
   const handleClick = () => {
     if (!showInfo) {
-      getTodo();
       setShowInfo(true);
     } else {
       setShowInfo(false);
     }
   };
-  const handleDelete = () => {
-    deleteTodo();
-  };
+
   return (
     <div>
       <button onClick={() => handleClick()}>{todo.title}</button>
-      <button onClick={() => handleDelete()}>delete</button>
-      {showInfo && loading && <div>Loading</div>}
-      {showInfo && error && <div>{error}</div>}
+      {showInfo && isLoading && <div>Loading</div>}
+      {showInfo && error && <div>{error.message}</div>}
       {showInfo && data && (
         <div>
           <p>{data.title}</p>
