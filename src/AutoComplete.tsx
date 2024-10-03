@@ -1,6 +1,10 @@
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 
-const Autocomplete = ({ suggestions }) => {
+interface autoColpeteProps {
+  suggestions: string[];
+}
+
+const Autocomplete = ({ suggestions }: autoColpeteProps) => {
   const [filteredSuggestions, setFilteredSuggestions] = useState(suggestions);
   const [inputValue, setInputValue] = useState("");
   const [isVisible, setIsVisible] = useState(false);
@@ -17,7 +21,7 @@ const Autocomplete = ({ suggestions }) => {
       setFilteredSuggestions(filtered);
       setIsVisible(true);
     } else {
-      setIsVisible(false);
+      setFilteredSuggestions(suggestions);
     }
   };
   const handleFocus = () => {
@@ -27,7 +31,7 @@ const Autocomplete = ({ suggestions }) => {
   const handleBlur = () => {
     setTimeout(() => setIsVisible(false), 200);
   };
-  const handleSuggestionClick = (suggestion) => {
+  const handleSuggestionClick = (suggestion: SetStateAction<string>) => {
     setInputValue(suggestion);
     setIsVisible(false);
   };
